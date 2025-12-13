@@ -226,7 +226,7 @@ async function processVideo(sessionId, photoPath, email) {
     const base64Image = imageData.toString("base64");
 
     const imageResponse = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-2.0-flash-exp-image-generation",
       contents: [
         {
           role: "user",
