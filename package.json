@@ -1,0 +1,24 @@
+{
+  "name": "santa-video-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google-cloud/vertexai": "^1.10.0",
+    "@google/genai": "^1.33.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.5.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
+    "resend": "^6.6.0",
+    "stripe": "^20.0.0"
+  }
+}

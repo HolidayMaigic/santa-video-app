@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Your Photo - Santa Magic Video</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .emoji-header {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #c8e6c9;
+      margin-bottom: 30px;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .upload-area {
+      border: 3px dashed rgba(255,255,255,0.4);
+      border-radius: 15px;
+      padding: 40px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover {
+      border-color: #a5d6a7;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .upload-area.drag-over {
+      border-color: #a5d6a7;
+      background: rgba(165, 214, 167, 0.2);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .upload-text {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-hint {
+      font-size: 0.9rem;
+      color: #a5d6a7;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .preview-container {
+      display: none;
+      margin: 20px 0;
+    }
+
+    .preview-container.show {
+      display: block;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      color: #c8e6c9;
+      margin-bottom: 10px;
+    }
+
+    .change-photo {
+      background: none;
+      border: 1px solid #a5d6a7;
+      color: #a5d6a7;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .change-photo:hover {
+      background: rgba(165, 214, 167, 0.2);
+    }
+
+    .email-section {
+      margin: 25px 0;
+      text-align: left;
+    }
+
+    .email-section label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .email-section input {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+    }
+
+    .submit-button {
+      background: #c62828;
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Processing Section */
+    .processing-section {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .processing-section.show {
+      display: block;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #a5d6a7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-text {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .status-detail {
+      color: #c8e6c9;
+      font-size: 0.95rem;
+    }
+
+    /* Complete Section */
+    .complete-section {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .complete-section.show {
+      display: block;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .video-container {
+      margin: 20px 0;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-container video {
+      width: 100%;
+      display: block;
+    }
+
+    .download-button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .download-button:hover {
+      background: #1b5e20;
+    }
+
+    /* Error Section */
+    .error-section {
+      display: none;
+      background: rgba(198, 40, 40, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+    }
+
+    .error-section.show {
+      display: block;
+    }
+
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .error-message {
+      margin-bottom: 20px;
+    }
+
+    .retry-button {
+      background: #fff;
+      color: #c62828;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .tips {
+      margin-top: 30px;
+      text-align: left;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .tips h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #a5d6a7;
+    }
+
+    .tips ul {
+      padding-left: 20px;
+      color: #c8e6c9;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="emoji-header">🎅📸</div>
+    <h1>Upload Your Photo</h1>
+    <p class="subtitle">Let's add Santa to your home!</p>
+
+    <!-- Upload Section -->
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📷</div>
+        <p class="upload-text">Click or drag a photo here</p>
+        <p class="upload-hint">JPG or PNG, max 10MB</p>
+      </div>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg">
+
+      <div class="preview-container" id="previewContainer">
+        <img id="previewImage" class="preview-image" src="" alt="Preview">
+        <p class="file-name" id="fileName"></p>
+        <button class="change-photo" onclick="resetUpload()">Change Photo</button>
+      </div>
+
+      <div class="email-section">
+        <label for="email">Email (optional - we'll send you the video)</label>
+        <input type="email" id="email" placeholder="your@email.com">
+      </div>
+
+      <button class="submit-button" id="submitButton" onclick="submitPhoto()" disabled>
+        ✨ Create My Santa Video
+      </button>
+
+      <div class="tips">
+        <h3>📸 Tips for best results:</h3>
+        <ul>
+          <li>Use a well-lit photo of your Christmas tree or fireplace</li>
+          <li>Make sure there's some open space for Santa to appear</li>
+          <li>Landscape orientation works best</li>
+          <li>The clearer the photo, the better the magic!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Processing Section -->
+    <div class="processing-section" id="processingSection">
+      <div class="spinner"></div>
+      <p class="status-text" id="statusText">Creating your magical video...</p>
+      <p class="status-detail" id="statusDetail">This usually takes 2-5 minutes</p>
+    </div>
+
+    <!-- Complete Section -->
+    <div class="complete-section" id="completeSection">
+      <div class="success-icon">🎉</div>
+      <h2>Your Santa Video is Ready!</h2>
+      <div class="video-container">
+        <video id="resultVideo" controls playsinline></video>
+      </div>
+      <a class="download-button" id="downloadButton" download="santa-video.mp4">
+        ⬇️ Download Video
+      </a>
+      <p style="margin-top: 20px; color: #c8e6c9;">Share the magic with your family! 🎄</p>
+    </div>
+
+    <!-- Error Section -->
+    <div class="error-section" id="errorSection">
+      <div class="error-icon">😔</div>
+      <h2>Something went wrong</h2>
+      <p class="error-message" id="errorMessage">We couldn't create your video.</p>
+      <button class="retry-button" onclick="location.reload()">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    // Get session ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    let selectedFile = null;
+
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    const fileName = document.getElementById('fileName');
+    const submitButton = document.getElementById('submitButton');
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFile(files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    function handleFile(file) {
+      if (!file.type.match('image/(jpeg|png|jpg)')) {
+        alert('Please select a JPG or PNG image');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image must be smaller than 10MB');
+        return;
+      }
+
+      selectedFile = file;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewContainer.classList.add('show');
+        uploadArea.style.display = 'none';
+        fileName.textContent = file.name;
+        submitButton.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetUpload() {
+      selectedFile = null;
+      fileInput.value = '';
+      previewContainer.classList.remove('show');
+      uploadArea.style.display = 'block';
+      submitButton.disabled = true;
+    }
+
+    async function submitPhoto() {
+      if (!selectedFile || !sessionId) return;
+
+      submitButton.disabled = true;
+      submitButton.textContent = '⏳ Uploading...';
+
+      const formData = new FormData();
+      formData.append('photo', selectedFile);
+      formData.append('session_id', sessionId);
+      formData.append('email', document.getElementById('email').value);
+
+      try {
+        const response = await fetch('/upload-photo', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showProcessing();
+          pollStatus();
+        } else {
+          throw new Error(data.error || 'Upload failed');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        showError(error.message);
+      }
+    }
+
+    function showProcessing() {
+      document.getElementById('uploadSection').style.display = 'none';
+      document.getElementById('processingSection').classList.add('show');
+    }
+
+    function showComplete(videoUrl) {
+      document.getElementById('processingSection').classList.remove('show');
+      document.getElementById('completeSection').classList.add('show');
+      
+      const video = document.getElementById('resultVideo');
+      video.src = videoUrl;
+      
+      document.getElementById('downloadButton').href = videoUrl;
+    }
+
+    function showError(message) {
+      document.getElementById('uploadSection').style.display = 'none';
+      document.getElementById('processingSection').classList.remove('show');
+      document.getElementById('errorSection').classList.add('show');
+      document.getElementById('errorMessage').textContent = message;
+    }
+
+    async function pollStatus() {
+      const statusText = document.getElementById('statusText');
+      const statusDetail = document.getElementById('statusDetail');
+
+      const statusMessages = {
+        'processing': { text: 'Processing your photo...', detail: 'Just getting started' },
+        'adding_santa': { text: '🎅 Adding Santa to your photo...', detail: 'The magic is happening!' },
+        'generating_video': { text: '🎬 Creating your video...', detail: 'Almost there, this takes a minute' },
+        'complete': { text: '✨ Complete!', detail: 'Your video is ready' },
+        'error': { text: '❌ Error', detail: 'Something went wrong' },
+      };
+
+      const poll = async () => {
+        try {
+          const response = await fetch(`/status/${sessionId}`);
+          const data = await response.json();
+
+          if (data.status && statusMessages[data.status]) {
+            statusText.textContent = statusMessages[data.status].text;
+            statusDetail.textContent = statusMessages[data.status].detail;
+          }
+
+          if (data.status === 'complete' && data.videoUrl) {
+            showComplete(data.videoUrl);
+            return;
+          }
+
+          if (data.status === 'error') {
+            showError(data.error || 'Video generation failed');
+            return;
+          }
+
+          // Keep polling
+          setTimeout(poll, 3000);
+        } catch (error) {
+          console.error('Status poll error:', error);
+          setTimeout(poll, 5000);
+        }
+      };
+
+      poll();
+    }
+  </script>
+</body>
+</html>

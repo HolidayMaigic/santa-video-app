@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Santa Magic Video - See Santa in YOUR Home!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, white, transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 160px 120px, white, transparent);
+      background-size: 200px 200px;
+      animation: snow 4s linear infinite;
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    @keyframes snow {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 200px; }
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      margin-bottom: 40px;
+    }
+
+    .emoji-header {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #c8e6c9;
+      margin-bottom: 20px;
+    }
+
+    /* Examples Section */
+    .examples-section {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+    }
+
+    .examples-section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+    }
+
+    .example {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .example-item {
+      flex: 1;
+      min-width: 280px;
+      max-width: 400px;
+    }
+
+    .example-label {
+      font-size: 0.9rem;
+      color: #a5d6a7;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .example-item img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .example-item video {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .arrow {
+      font-size: 40px;
+      color: #a5d6a7;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 35px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+    }
+
+    .upload-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .upload-area {
+      border: 3px dashed rgba(255,255,255,0.4);
+      border-radius: 15px;
+      padding: 40px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover {
+      border-color: #a5d6a7;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .upload-area.drag-over {
+      border-color: #a5d6a7;
+      background: rgba(165, 214, 167, 0.2);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .upload-text {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-hint {
+      font-size: 0.9rem;
+      color: #a5d6a7;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .preview-container {
+      display: none;
+      margin: 20px 0;
+    }
+
+    .preview-container.show {
+      display: block;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      color: #c8e6c9;
+      margin-bottom: 10px;
+    }
+
+    .change-photo {
+      background: none;
+      border: 1px solid #a5d6a7;
+      color: #a5d6a7;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .change-photo:hover {
+      background: rgba(165, 214, 167, 0.2);
+    }
+
+    .email-section {
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .email-section label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .email-section input {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: rgba(198, 40, 40, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+    }
+
+    .price {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .price-note {
+      color: #ffcdd2;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .cta-button {
+      background: #fff;
+      color: #c62828;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-button:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .cta-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .upload-first-note {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: #ffcdd2;
+      display: none;
+    }
+
+    .upload-first-note.show {
+      display: block;
+    }
+
+    /* How It Works */
+    .how-it-works {
+      margin: 40px 0;
+    }
+
+    .how-it-works h2 {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px 15px;
+      width: 160px;
+      backdrop-filter: blur(5px);
+    }
+
+    .step-number {
+      background: #c62828;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .step-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 0.85rem;
+    }
+
+    /* FAQ */
+    .faq {
+      margin: 40px 0;
+      text-align: left;
+    }
+
+    .faq h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 1.6rem;
+    }
+
+    .faq-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .faq-item h3 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: #a5d6a7;
+    }
+
+    .faq-item p {
+      font-size: 0.9rem;
+      color: #c8e6c9;
+      line-height: 1.5;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      color: #81c784;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .subtitle { font-size: 1.1rem; }
+      .emoji-header { font-size: 48px; }
+      .price { font-size: 2rem; }
+      .arrow { display: none; }
+      .example { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="snow"></div>
+  
+  <div class="container">
+    <div class="content">
+      <div class="hero">
+        <div class="emoji-header">🎅🎄✨</div>
+        <h1>See Santa in YOUR Home!</h1>
+        <p class="subtitle">Create a magical video of Santa visiting your living room</p>
+      </div>
+
+      <!-- Examples Section -->
+      <div class="examples-section">
+        <h2>✨ See the Magic in Action</h2>
+        <div class="example">
+          <div class="example-item">
+            <p class="example-label">📸 Your Photo</p>
+            <img src="/examples/before-1.jpg" alt="Before - Original photo">
+          </div>
+          <div class="arrow">→</div>
+          <div class="example-item">
+            <p class="example-label">🎬 Magic Video</p>
+            <video autoplay loop muted playsinline>
+              <source src="/examples/after-1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <h2>📸 Upload Your Photo</h2>
+        
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📷</div>
+          <p class="upload-text">Click or drag a photo here</p>
+          <p class="upload-hint">JPG or PNG, max 10MB</p>
+        </div>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg">
+
+        <div class="preview-container" id="previewContainer">
+          <img id="previewImage" class="preview-image" src="" alt="Preview">
+          <p class="file-name" id="fileName"></p>
+          <button class="change-photo" onclick="resetUpload(event)">Change Photo</button>
+        </div>
+
+        <div class="email-section">
+          <label for="email">Email (we'll send you the video link)</label>
+          <input type="email" id="email" placeholder="your@email.com">
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <div class="price">$5</div>
+        <p class="price-note">One-time purchase • Video delivered in minutes</p>
+        <button class="cta-button" id="buyButton" onclick="startCheckout()" disabled>
+          🎄 Create My Santa Video
+        </button>
+        <p class="upload-first-note" id="uploadNote">👆 Please upload a photo first</p>
+      </div>
+
+      <!-- How It Works -->
+      <div class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-icon">📱</div>
+            <p>Upload a photo of your tree or fireplace</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-icon">💳</div>
+            <p>Complete quick checkout</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-icon">✨</div>
+            <p>AI adds Santa to your photo</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-icon">🎬</div>
+            <p>Get your magical video!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq">
+        <h2>Questions?</h2>
+        <div class="faq-item">
+          <h3>What kind of photo works best?</h3>
+          <p>A clear photo of your Christmas tree, fireplace, or living room with good lighting. Leave some space where Santa can appear!</p>
+        </div>
+        <div class="faq-item">
+          <h3>How long does it take?</h3>
+          <p>Your video will be ready in about 2-5 minutes. You can wait on the page or we'll email you when it's done.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How long is the video?</h3>
+          <p>Each video is approximately 8 seconds - perfect for sharing on social media or showing the kids!</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I share the video?</h3>
+          <p>Absolutely! Download it and share however you like - text it, post it, or play it on Christmas morning.</p>
+        </div>
+      </div>
+
+      <footer>
+        <p>Made with ❤️ for Christmas magic</p>
+        <p style="margin-top: 10px;">© 2025 Santa Magic Video</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    let uploadId = null;
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    const fileName = document.getElementById('fileName');
+    const buyButton = document.getElementById('buyButton');
+    const uploadNote = document.getElementById('uploadNote');
+
+    // Show upload note initially
+    uploadNote.classList.add('show');
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      if (e.dataTransfer.files.length > 0) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    async function handleFile(file) {
+      if (!file.type.match('image/(jpeg|png|jpg)')) {
+        alert('Please select a JPG or PNG image');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image must be smaller than 10MB');
+        return;
+      }
+
+      selectedFile = file;
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewContainer.classList.add('show');
+        uploadArea.style.display = 'none';
+        fileName.textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to server
+      buyButton.disabled = true;
+      buyButton.textContent = '⏳ Uploading...';
+
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const response = await fetch('/pre-upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          uploadId = data.uploadId;
+          buyButton.disabled = false;
+          buyButton.textContent = '🎄 Create My Santa Video - $5';
+          uploadNote.classList.remove('show');
+        } else {
+          throw new Error(data.error || 'Upload failed');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('Failed to upload photo. Please try again.');
+        resetUpload();
+      }
+    }
+
+    function resetUpload(e) {
+      if (e) e.stopPropagation();
+      selectedFile = null;
+      uploadId = null;
+      fileInput.value = '';
+      previewContainer.classList.remove('show');
+      uploadArea.style.display = 'block';
+      buyButton.disabled = true;
+      buyButton.textContent = '🎄 Create My Santa Video';
+      uploadNote.classList.add('show');
+    }
+
+    async function startCheckout() {
+      if (!uploadId) {
+        alert('Please upload a photo first');
+        return;
+      }
+
+      const email = document.getElementById('email').value;
+      
+      buyButton.disabled = true;
+      buyButton.textContent = '⏳ Loading checkout...';
+
+      try {
+        const response = await fetch('/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uploadId, email }),
+        });
+
+        const data = await response.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error(data.error || 'No checkout URL received');
+        }
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Something went wrong. Please try again.');
+        buyButton.disabled = false;
+        buyButton.textContent = '🎄 Create My Santa Video - $5';
+      }
+    }
+  </script>
+</body>
+</html>
