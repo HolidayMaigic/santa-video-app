@@ -276,7 +276,7 @@ async function processVideo(sessionId, photoPath, email) {
     const operation = await ai.models.generateVideos({
       model: "veo-3.1-generate-preview",
       prompt:
-        "a video of santa clause placing presents under the christmas tree. He's taking gifts out of his big bag of gifts and placing them around the tree. There's Christmas music playing in the background, and the only thing he says is, "ho, ho, ho, merry Christmas!",
+        "a video of santa clause placing presents under the christmas tree. He's taking gifts out of his big bag of gifts and placing them around the tree. There's Christmas music playing in the background, and the only thing he says is, 'ho, ho, ho,' Merry Christmas!",
       image: {
         imageBytes: santaImageBase64,
         mimeType: "image/jpeg",
