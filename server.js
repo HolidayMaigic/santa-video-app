@@ -238,7 +238,7 @@ async function processVideo(sessionId, photoPath, email) {
               },
             },
             {
-              text: "Take this exact photograph and add a Santa Clause kneeling by the tree, he has his big bag of gifts sitting beside him, he's placing presents around the tree. We can only see him from behind. Keep everything else in the photo the same. No music, no audio, no speaking.",
+              text: "Take this exact photograph and add a Santa Clause kneeling by the tree, he has his big bag of gifts sitting beside him, he's placing presents around the tree. We can only see him from behind. Keep everything else in the photo the same. No pets, don't add random things",
             },
           ],
         },
@@ -276,7 +276,7 @@ async function processVideo(sessionId, photoPath, email) {
     const operation = await ai.models.generateVideos({
       model: "veo-3.1-generate-preview",
       prompt:
-        "a video of santa clause placing presents under the christmas tree. He's taking gifts out of his big bag of gifts and placing them around the tree. No speaking, no audio, no music.",
+        "a video of santa clause placing presents under the christmas tree. He's taking gifts out of his big bag of gifts and placing them around the tree. There's Christmas music playing in the background, and the only thing he says is, "ho, ho, ho, merry Christmas!",
       image: {
         imageBytes: santaImageBase64,
         mimeType: "image/jpeg",
